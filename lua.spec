@@ -1,6 +1,6 @@
 Name:           lua
 Version:        5.0
-Release:        0.fdr.1.rh90
+Release:        0.fdr.2
 Epoch:          0
 Summary:        A powerful light-weight programming language
 
@@ -10,6 +10,7 @@ URL:            http://www.lua.org/
 Source0:        http://www.lua.org/ftp/lua-5.0.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
+BuildRequires:  readline-devel, ncurses-devel
 Provides:       %{name}-devel = %{epoch}:%{version}-%{release}
 
 %description
@@ -22,12 +23,10 @@ is dynamically typed, interpreted from bytecodes, and has automatic
 memory management with garbage collection, making it ideal for
 configuration, scripting, and rapid prototyping.
 
-# -----------------------------------------------------------------------------
 
 %prep
 %setup -q
 
-# -----------------------------------------------------------------------------
 
 %build
 make %{?_smp_mflags} \
@@ -35,10 +34,10 @@ make %{?_smp_mflags} \
   MYLDFLAGS="-Wl,-E" \
   LOADLIB=-DUSE_DLOPEN=1 \
   DLLIB=-ldl \
-  NUMBER="-DLUA_USER_H='\"../etc/luser_number.h\"' -DUSE_FASTROUND"
-make test
+  NUMBER="-DLUA_USER_H='\"../etc/luser_number.h\"' -DUSE_FASTROUND" \
+  USERCONF="-DLUA_USERCONFIG='\"../../etc/saconfig.c\"' -DUSE_READLINE" \
+  EXTRA_LIBS="-lm -lreadline -lncurses"
 
-# -----------------------------------------------------------------------------
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -48,26 +47,30 @@ rm -rf $RPM_BUILD_ROOT
   INSTALL_INC=$RPM_BUILD_ROOT%{_includedir} \
   INSTALL_LIB=$RPM_BUILD_ROOT%{_libdir} \
   INSTALL_MAN=$RPM_BUILD_ROOT%{_mandir}/man1 \
-  INSTALL_EXEC="install -p -m 0755" \
-  INSTALL_DATA="install -p -m 0644"
+  INSTALL_EXEC="install -pm 755" \
+  INSTALL_DATA="install -pm 644"
 
-# -----------------------------------------------------------------------------
+
+%check || :
+make test
+
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-# -----------------------------------------------------------------------------
 
 %files
 %defattr(-,root,root,-)
 %doc COPYRIGHT HISTORY README doc/*.html doc/*.gif
-%{_bindir}/*
-%{_includedir}/*
-%{_libdir}/*
-%{_mandir}/man1/*
+%{_bindir}/lua*
+%{_includedir}/l*.h
+%{_libdir}/liblua*.a
+%{_mandir}/man1/lua*.1*
 
-# -----------------------------------------------------------------------------
 
 %changelog
+* Mon Nov 17 2003 Oren Tirosh <oren at hishome.net> - 0:5.0-0.fdr.2
+- Enable readline support.
+
 * Sat Jun 21 2003 Ville Skyttä <ville.skytta at iki.fi> - 0:5.0-0.fdr.1
 - First build.
