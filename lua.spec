@@ -1,6 +1,6 @@
 Name:           lua
 Version:        5.0
-Release:        0.fdr.2.1
+Release:        0.fdr.2.2
 Epoch:          0
 Summary:        A powerful light-weight programming language
 
