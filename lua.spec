@@ -1,6 +1,7 @@
 Name:           lua
 Version:        5.0.2
-Release:        2
+Release:        3
+
 Summary:        A powerful light-weight programming language
 
 Group:          Development/Languages
@@ -69,6 +70,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Apr  7 2005 Michael Schwendt <mschwendt[AT]users.sf.net>
+- rebuilt
+
 * Sat Feb 12 2005 David Woodhouse <dwmw2@infradead.org> - 5.0.2-2
 - Don't use fastround on ppc
 
