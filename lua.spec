@@ -1,17 +1,16 @@
 Name:           lua
-Version:        5.0
-Release:        2
-Epoch:          0
+Version:        5.0.2
+Release:        1
 Summary:        A powerful light-weight programming language
 
 Group:          Development/Languages
 License:        MIT
 URL:            http://www.lua.org/
-Source0:        http://www.lua.org/ftp/lua-5.0.tar.gz
+Source0:        http://www.lua.org/ftp/lua-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  readline-devel, ncurses-devel
-Provides:       %{name}-devel = %{epoch}:%{version}-%{release}
+Provides:       %{name}-devel = %{version}-%{release}
 
 %description
 Lua is a powerful light-weight programming language designed for
@@ -69,6 +68,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Feb 01 2005 Panu Matilainen <pmatilai@welho.com> - 5.0.2-1
+- update to 5.0.2
+- remove epoch 0, drop fedora.us release tag
+
 * Mon Nov 17 2003 Oren Tirosh <oren at hishome.net> - 0:5.0-0.fdr.2
 - Enable readline support.
 
