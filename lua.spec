@@ -32,7 +32,7 @@ make %{?_smp_mflags} \
   MYLDFLAGS="-Wl,-E" \
   LOADLIB=-DUSE_DLOPEN=1 \
   DLLIB=-ldl \
-%ifarch %{ix86}
+%ifarch %{ix86} x86_64
   NUMBER="-DLUA_USER_H='\"../etc/luser_number.h\"' -DUSE_FASTROUND" \
 %endif
   USERCONF="-DLUA_USERCONFIG='\"../../etc/saconfig.c\"' -DUSE_READLINE" \
