@@ -1,6 +1,6 @@
 Name:           lua
 Version:        5.0.2
-Release:        1
+Release:        2
 Summary:        A powerful light-weight programming language
 
 Group:          Development/Languages
@@ -26,14 +26,15 @@ configuration, scripting, and rapid prototyping.
 %prep
 %setup -q
 
-
 %build
 make %{?_smp_mflags} \
   MYCFLAGS="$RPM_OPT_FLAGS -fPIC" \
   MYLDFLAGS="-Wl,-E" \
   LOADLIB=-DUSE_DLOPEN=1 \
   DLLIB=-ldl \
+%ifarch %{ix86}
   NUMBER="-DLUA_USER_H='\"../etc/luser_number.h\"' -DUSE_FASTROUND" \
+%endif
   USERCONF="-DLUA_USERCONFIG='\"../../etc/saconfig.c\"' -DUSE_READLINE" \
   EXTRA_LIBS="-lm -lreadline -lncurses"
 
@@ -68,6 +69,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Feb 12 2005 David Woodhouse <dwmw2@infradead.org> - 5.0.2-2
+- Don't use fastround on ppc
+
 * Tue Feb 01 2005 Panu Matilainen <pmatilai@welho.com> - 5.0.2-1
 - update to 5.0.2
 - remove epoch 0, drop fedora.us release tag
