@@ -1,6 +1,6 @@
 Name:           lua
 Version:        5.0.2
-Release:        3
+Release: 4
 
 Summary:        A powerful light-weight programming language
 
@@ -70,6 +70,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun May 22 2005 Jeremy Katz <katzj@redhat.com> - 5.0.2-4
+- rebuild on all arches
+
 * Fri Apr  7 2005 Michael Schwendt <mschwendt[AT]users.sf.net>
 - rebuilt
 
