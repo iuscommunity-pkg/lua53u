@@ -1,8 +1,7 @@
 Name:           lua
 Version:        5.0.2
-Release: 4
-
-Summary:        A powerful light-weight programming language
+Release:        5%{?dist}
+Summary:        Powerful light-weight programming language
 
 Group:          Development/Languages
 License:        MIT
@@ -43,6 +42,7 @@ make %{?_smp_mflags} \
 %install
 rm -rf $RPM_BUILD_ROOT
 %makeinstall \
+  STRIP=/bin/true \
   INSTALL_ROOT=$RPM_BUILD_ROOT%{_prefix} \
   INSTALL_BIN=$RPM_BUILD_ROOT%{_bindir} \
   INSTALL_INC=$RPM_BUILD_ROOT%{_includedir} \
@@ -52,7 +52,7 @@ rm -rf $RPM_BUILD_ROOT
   INSTALL_DATA="install -pm 644"
 
 
-%check || :
+%check
 make test
 
 
@@ -70,10 +70,14 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Oct 16 2005 Ville Skyttä <ville.skytta at iki.fi> - 5.0.2-5
+- Fix -debuginfo (#165304).
+- Cosmetic specfile improvements.
+
 * Sun May 22 2005 Jeremy Katz <katzj@redhat.com> - 5.0.2-4
 - rebuild on all arches
 
-* Fri Apr  7 2005 Michael Schwendt <mschwendt[AT]users.sf.net>
+* Fri Apr  7 2005 Michael Schwendt <mschwendt[AT]users.sf.net> - 5.0.2-3
 - rebuilt
 
 * Sat Feb 12 2005 David Woodhouse <dwmw2@infradead.org> - 5.0.2-2
