@@ -1,6 +1,6 @@
 Name:           lua
-Version:        5.0.2
-Release:        5%{?dist}
+Version:        5.1
+Release:        1%{?dist}
 Summary:        Powerful light-weight programming language
 
 Group:          Development/Languages
@@ -36,28 +36,22 @@ make %{?_smp_mflags} \
   NUMBER="-DLUA_USER_H='\"../etc/luser_number.h\"' -DUSE_FASTROUND" \
 %endif
   USERCONF="-DLUA_USERCONFIG='\"../../etc/saconfig.c\"' -DUSE_READLINE" \
-  EXTRA_LIBS="-lm -lreadline -lncurses"
+  EXTRA_LIBS="-lm -lreadline -lncurses" \
+  linux
 
 
 %install
-rm -rf $RPM_BUILD_ROOT
-%makeinstall \
-  STRIP=/bin/true \
-  INSTALL_ROOT=$RPM_BUILD_ROOT%{_prefix} \
-  INSTALL_BIN=$RPM_BUILD_ROOT%{_bindir} \
-  INSTALL_INC=$RPM_BUILD_ROOT%{_includedir} \
-  INSTALL_LIB=$RPM_BUILD_ROOT%{_libdir} \
-  INSTALL_MAN=$RPM_BUILD_ROOT%{_mandir}/man1 \
-  INSTALL_EXEC="install -pm 755" \
-  INSTALL_DATA="install -pm 644"
-
+rm -rf %{buildroot}
+make install \
+	INSTALL_TOP=%{buildroot}/usr \
+	INSTALL_MAN=%{buildroot}%{_mandir}/man1
 
 %check
 make test
 
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
 
 %files
@@ -65,11 +59,15 @@ rm -rf $RPM_BUILD_ROOT
 %doc COPYRIGHT HISTORY README doc/*.html doc/*.gif
 %{_bindir}/lua*
 %{_includedir}/l*.h
+%{_includedir}/l*.hpp
 %{_libdir}/liblua*.a
 %{_mandir}/man1/lua*.1*
 
 
 %changelog
+* Mon May 08 2006 Michael J. Knox <michael[AT]knox.net.nz> - 5.1-1
+- version bump
+
 * Sun Oct 16 2005 Ville Skyttä <ville.skytta at iki.fi> - 5.0.2-5
 - Fix -debuginfo (#165304).
 - Cosmetic specfile improvements.
