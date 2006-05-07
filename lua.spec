@@ -1,6 +1,6 @@
 Name:           lua
 Version:        5.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Powerful light-weight programming language
 
 Group:          Development/Languages
@@ -44,6 +44,7 @@ make %{?_smp_mflags} \
 rm -rf %{buildroot}
 make install \
 	INSTALL_TOP=%{buildroot}/usr \
+	INSTALL_LIB=%{buildroot}/%{_libdir} \
 	INSTALL_MAN=%{buildroot}%{_mandir}/man1
 
 %check
@@ -65,6 +66,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon May 08 2006 Michael J. Knox <michael[AT]knox.net.nz> - 5.1-2
+- fixed x86_64 builds
+
 * Mon May 08 2006 Michael J. Knox <michael[AT]knox.net.nz> - 5.1-1
 - version bump
 
