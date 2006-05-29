@@ -1,12 +1,13 @@
 Name:           lua
 Version:        5.1
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Powerful light-weight programming language
 
 Group:          Development/Languages
 License:        MIT
 URL:            http://www.lua.org/
 Source0:        http://www.lua.org/ftp/lua-%{version}.tar.gz
+Patch0:		lua-5.1-autotoolize-r1.patch.bz2
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  readline-devel, ncurses-devel
@@ -25,31 +26,21 @@ configuration, scripting, and rapid prototyping.
 
 %prep
 %setup -q
+%patch0 -p1
 
 %build
-make %{?_smp_mflags} \
-  MYCFLAGS="$RPM_OPT_FLAGS -fPIC" \
-  MYLDFLAGS="-Wl,-E" \
-  LOADLIB=-DUSE_DLOPEN=1 \
-  DLLIB=-ldl \
-%ifarch %{ix86} x86_64
-  NUMBER="-DLUA_USER_H='\"../etc/luser_number.h\"' -DUSE_FASTROUND" \
-%endif
-  USERCONF="-DLUA_USERCONFIG='\"../../etc/saconfig.c\"' -DUSE_READLINE" \
-  EXTRA_LIBS="-lm -lreadline -lncurses" \
-  linux
+# fix perms on auto files
+chmod u+x autogen.sh config.guess config.sub configure depcomp install-sh missing
 
+./autogen.sh
+
+%configure --with-readline
+
+make %{?_smp_mflags} 
 
 %install
 rm -rf %{buildroot}
-make install \
-	INSTALL_TOP=%{buildroot}/usr \
-	INSTALL_LIB=%{buildroot}/%{_libdir} \
-	INSTALL_MAN=%{buildroot}%{_mandir}/man1
-
-%check
-make test
-
+%makeinstall 
 
 %clean
 rm -rf %{buildroot}
@@ -61,11 +52,15 @@ rm -rf %{buildroot}
 %{_bindir}/lua*
 %{_includedir}/l*.h
 %{_includedir}/l*.hpp
-%{_libdir}/liblua*.a
+%{_libdir}/liblua*.*
+%{_libdir}/pkgconfig/*.pc
 %{_mandir}/man1/lua*.1*
 
 
 %changelog
+* Mon May 29 2006 Michael J. Knox <michael[AT]knox.net.nz> - 5.1-3
+- added autotools patch from Petri Lehtinen, http://lua-users.org
+
 * Mon May 08 2006 Michael J. Knox <michael[AT]knox.net.nz> - 5.1-2
 - fixed x86_64 builds
 
