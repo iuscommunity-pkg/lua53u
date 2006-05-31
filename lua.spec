@@ -1,6 +1,6 @@
 Name:           lua
 Version:        5.1
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Powerful light-weight programming language
 
 Group:          Development/Languages
@@ -10,6 +10,7 @@ Source0:        http://www.lua.org/ftp/lua-%{version}.tar.gz
 Patch0:		lua-5.1-autotoolize-r1.patch.bz2
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
+Requires:	pkgconfig
 BuildRequires:  readline-devel, ncurses-devel
 Provides:       %{name}-devel = %{version}-%{release}
 
@@ -58,6 +59,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jun 01 2006 Michael J. Knox <michael[AT]knox.net.nz> - 5.1-4
+- added Requires for pkgconfig BZ#193674
+
 * Mon May 29 2006 Michael J. Knox <michael[AT]knox.net.nz> - 5.1-3
 - added autotools patch from Petri Lehtinen, http://lua-users.org
 
