@@ -1,6 +1,6 @@
 Name:           lua
 Version:        5.1
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Powerful light-weight programming language
 
 Group:          Development/Languages
@@ -10,7 +10,6 @@ Source0:        http://www.lua.org/ftp/lua-%{version}.tar.gz
 Patch0:		lua-5.1-autotoolize-r1.patch.bz2
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-Requires:	pkgconfig
 BuildRequires:  readline-devel, ncurses-devel
 Provides:       %{name}-devel = %{version}-%{release}
 
@@ -24,6 +23,14 @@ is dynamically typed, interpreted from bytecodes, and has automatic
 memory management with garbage collection, making it ideal for
 configuration, scripting, and rapid prototyping.
 
+%package	devel
+Summary:	Development files for %{name}
+Group:		System Environment/Libraries
+Requires:	%{name} = %{version}-%{release}
+Requires:	ncurses-devel, pkgconfig
+
+%description	devel
+This package contains development files for %{name}.
 
 %prep
 %setup -q
@@ -43,6 +50,8 @@ make %{?_smp_mflags}
 rm -rf %{buildroot}
 %makeinstall 
 
+find %{buildroot} -type f -name "*.la" -exec rm -f {} ';'
+
 %clean
 rm -rf %{buildroot}
 
@@ -51,14 +60,22 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %doc COPYRIGHT HISTORY README doc/*.html doc/*.gif
 %{_bindir}/lua*
+%{_libdir}/liblua-*.so
+%{_mandir}/man1/lua*.1*
+
+%files devel
+%defattr(-,root,root,-)
 %{_includedir}/l*.h
 %{_includedir}/l*.hpp
-%{_libdir}/liblua*.*
+%{_libdir}/liblua.so
+%{_libdir}/*.a
 %{_libdir}/pkgconfig/*.pc
-%{_mandir}/man1/lua*.1*
 
 
 %changelog
+* Tue Jun 06 2006 Michael J. Knox <michael[AT]knox.net.nz> - 5.1-5
+- split out devel subpackage
+
 * Thu Jun 01 2006 Michael J. Knox <michael[AT]knox.net.nz> - 5.1-4
 - added Requires for pkgconfig BZ#193674
 
