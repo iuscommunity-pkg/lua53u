@@ -1,6 +1,6 @@
 Name:           lua
 Version:        5.1
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Powerful light-weight programming language
 
 Group:          Development/Languages
@@ -11,7 +11,6 @@ Patch0:		lua-5.1-autotoolize-r1.patch.bz2
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  readline-devel, ncurses-devel
-Provides:       %{name}-devel = %{version}-%{release}
 
 %description
 Lua is a powerful light-weight programming language designed for
@@ -73,6 +72,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jun 08 2006 Michael J. Knox <michael[AT]knox.net.nz> - 5.1-6
+- fixed broken provides
+
 * Tue Jun 06 2006 Michael J. Knox <michael[AT]knox.net.nz> - 5.1-5
 - split out devel subpackage
 
