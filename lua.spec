@@ -1,6 +1,6 @@
 Name:           lua
 Version:        5.1
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Powerful light-weight programming language
 
 Group:          Development/Languages
@@ -72,6 +72,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Aug 27 2006 Michael J. Knox <michael[AT]knox.net.nz> - 5.1-7
+- Rebuild for FC6
+
 * Thu Jun 08 2006 Michael J. Knox <michael[AT]knox.net.nz> - 5.1-6
 - fixed broken provides
 
