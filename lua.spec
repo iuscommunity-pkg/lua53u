@@ -1,16 +1,14 @@
 Name:           lua
-Version:        5.1
-Release:        7%{?dist}
+Version:        5.1.1
+Release:        1%{?dist}
 Summary:        Powerful light-weight programming language
-
 Group:          Development/Languages
 License:        MIT
 URL:            http://www.lua.org/
 Source0:        http://www.lua.org/ftp/lua-%{version}.tar.gz
-Patch0:		lua-5.1-autotoolize-r1.patch.bz2
+Patch0:         lua-5.1.1-autotoolize.patch.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-
-BuildRequires:  readline-devel, ncurses-devel
+BuildRequires:  readline-devel ncurses-devel
 
 %description
 Lua is a powerful light-weight programming language designed for
@@ -22,6 +20,7 @@ is dynamically typed, interpreted from bytecodes, and has automatic
 memory management with garbage collection, making it ideal for
 configuration, scripting, and rapid prototyping.
 
+
 %package	devel
 Summary:	Development files for %{name}
 Group:		System Environment/Libraries
@@ -31,28 +30,27 @@ Requires:	ncurses-devel, pkgconfig
 %description	devel
 This package contains development files for %{name}.
 
+
 %prep
 %setup -q
-%patch0 -p1
-
-%build
+%patch0 -p1 -E
 # fix perms on auto files
 chmod u+x autogen.sh config.guess config.sub configure depcomp install-sh missing
 
-./autogen.sh
 
+%build
 %configure --with-readline
-
 make %{?_smp_mflags} 
 
-%install
-rm -rf %{buildroot}
-%makeinstall 
 
-find %{buildroot} -type f -name "*.la" -exec rm -f {} ';'
+%install
+rm -rf $RPM_BUILD_ROOT
+make install DESTDIR=$RPM_BUILD_ROOT
+rm $RPM_BUILD_ROOT%{_libdir}/*.{la,a}
+
 
 %clean
-rm -rf %{buildroot}
+rm -rf $RPM_BUILD_ROOT
 
 
 %files
@@ -67,11 +65,14 @@ rm -rf %{buildroot}
 %{_includedir}/l*.h
 %{_includedir}/l*.hpp
 %{_libdir}/liblua.so
-%{_libdir}/*.a
 %{_libdir}/pkgconfig/*.pc
 
 
 %changelog
+* Sat Oct 14 2006 Hans de Goede <j.w.r.degoede@hhs.nl> 5.1.1-1
+- New upstream release 5.1.1
+- Fix detection of readline during compile (iow add readline support back)
+
 * Mon Aug 27 2006 Michael J. Knox <michael[AT]knox.net.nz> - 5.1-7
 - Rebuild for FC6
 
