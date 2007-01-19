@@ -1,6 +1,6 @@
 Name:           lua
 Version:        5.1.1
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Powerful light-weight programming language
 Group:          Development/Languages
 License:        MIT
@@ -43,6 +43,8 @@ chmod u+x autogen.sh config.guess config.sub configure depcomp install-sh missin
 # hack so that only /usr/bin/lua gets linked with readline as it is the
 # only one which needs this and otherwise we get License troubles
 make %{?_smp_mflags} LIBS="-ldl" luac_LDADD="liblua.la -lm -ldl"
+# also remove readline from lua.pc
+sed -i 's/-lreadline -lncurses //g' etc/lua.pc
 
 
 %install
@@ -71,6 +73,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jan 19 2007 Hans de Goede <j.w.r.degoede@hhs.nl> 5.1.1-3
+- Remove "-lreadline -lncurses" from lua.pc (bz 213895)
+
 * Sun Oct 15 2006 Hans de Goede <j.w.r.degoede@hhs.nl> 5.1.1-2
 - Only link /usr/bin/lua with readline / do not link %%{_libdir}/liblua-5.1.so
   with readline so that we don't cause any License troubles for packages
