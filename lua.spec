@@ -1,6 +1,6 @@
 Name:           lua
-Version:        5.1.1
-Release:        3%{?dist}
+Version:        5.1.2
+Release:        1%{?dist}
 Summary:        Powerful light-weight programming language
 Group:          Development/Languages
 License:        MIT
@@ -21,25 +21,27 @@ memory management with garbage collection, making it ideal for
 configuration, scripting, and rapid prototyping.
 
 
-%package	devel
-Summary:	Development files for %{name}
-Group:		System Environment/Libraries
-Requires:	%{name} = %{version}-%{release}
-Requires:	ncurses-devel, pkgconfig
+%package devel
+Summary:        Development files for %{name}
+Group:          System Environment/Libraries
+Requires:       %{name} = %{version}-%{release}
+Requires:       pkgconfig
 
-%description	devel
+%description devel
 This package contains development files for %{name}.
 
 
 %prep
 %setup -q
-%patch0 -p1 -E
+%patch0 -p1 -E -z .autoxxx
 # fix perms on auto files
 chmod u+x autogen.sh config.guess config.sub configure depcomp install-sh missing
 
 
 %build
 %configure --with-readline
+sed -i 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
+sed -i 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
 # hack so that only /usr/bin/lua gets linked with readline as it is the
 # only one which needs this and otherwise we get License troubles
 make %{?_smp_mflags} LIBS="-ldl" luac_LDADD="liblua.la -lm -ldl"
@@ -59,7 +61,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%doc COPYRIGHT HISTORY README doc/*.html doc/*.gif
+%doc COPYRIGHT HISTORY README doc/*.html doc/*.css doc/*.gif doc/*.png
 %{_bindir}/lua*
 %{_libdir}/liblua-*.so
 %{_mandir}/man1/lua*.1*
@@ -73,6 +75,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Apr  2 2007 Hans de Goede <j.w.r.degoede@hhs.nl> 5.1.2-1
+- New upstream release 5.1.2
+- Fix use of rpath on x86_64
+
 * Fri Jan 19 2007 Hans de Goede <j.w.r.degoede@hhs.nl> 5.1.1-3
 - Remove "-lreadline -lncurses" from lua.pc (bz 213895)
 
