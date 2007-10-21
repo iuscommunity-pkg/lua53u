@@ -1,6 +1,6 @@
 Name:           lua
 Version:        5.1.2
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Powerful light-weight programming language
 Group:          Development/Languages
 License:        MIT
@@ -77,6 +77,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Oct 21 2007 Hans de Goede <j.w.r.degoede@hhs.nl> 5.1.2-3
+- Also use lib64 instead of lib on ia64 and sparc64 
+
 * Sun Oct 21 2007 Hans de Goede <j.w.r.degoede@hhs.nl> 5.1.2-2
 - Fix multilib condlict in luaconf.h (bz 342561)
 
