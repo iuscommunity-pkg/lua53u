@@ -1,12 +1,13 @@
 Name:           lua
 Version:        5.1.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Powerful light-weight programming language
 Group:          Development/Languages
 License:        MIT
 URL:            http://www.lua.org/
 Source0:        http://www.lua.org/ftp/lua-%{version}.tar.gz
 Patch0:         lua-5.1.1-autotoolize.patch.gz
+Patch1:         lua-5.1.2-multilib.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  readline-devel ncurses-devel
 
@@ -34,6 +35,7 @@ This package contains development files for %{name}.
 %prep
 %setup -q
 %patch0 -p1 -E -z .autoxxx
+%patch1 -p1 -z .multilib
 # fix perms on auto files
 chmod u+x autogen.sh config.guess config.sub configure depcomp install-sh missing
 
@@ -75,6 +77,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Oct 21 2007 Hans de Goede <j.w.r.degoede@hhs.nl> 5.1.2-2
+- Fix multilib condlict in luaconf.h (bz 342561)
+
 * Mon Apr  2 2007 Hans de Goede <j.w.r.degoede@hhs.nl> 5.1.2-1
 - New upstream release 5.1.2
 - Fix use of rpath on x86_64
