@@ -15,3 +15,21 @@ diff -up lua-5.1.2/src/luaconf.h.template.in~ lua-5.1.2/src/luaconf.h.template.i
  /** autotools-patch **/
  
  #define LUA_PATH_DEFAULT  \
+diff -up lua-5.1.2/etc/lua.pc.in~ lua-5.1.2/etc/lua.pc.in
+--- lua-5.1.2/etc/lua.pc.in~	2007-11-26 09:35:47.000000000 +0100
++++ lua-5.1.2/etc/lua.pc.in	2007-11-26 09:35:47.000000000 +0100
+@@ -2,12 +2,12 @@ V= 5.1
+ R= 5.1.2
+ prefix= @prefix@
+ exec_prefix=${prefix}
+-libdir=${exec_prefix}/lib
++libdir= @libdir@
+ includedir=${prefix}/include
+ 
+ Name: Lua
+ Description: An Extensible Extension Language
+ Version: ${R}
+ Requires: 
+-Libs: -L${libdir} -llua @LUA_LIBS@
++Libs: -llua @LUA_LIBS@
+ Cflags: -I${includedir}
