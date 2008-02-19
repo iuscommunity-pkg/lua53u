@@ -1,6 +1,6 @@
 Name:           lua
 Version:        5.1.3
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Powerful light-weight programming language
 Group:          Development/Languages
 License:        MIT
@@ -75,6 +75,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Feb 19 2008 Fedora Release Engineering <rel-eng@fedoraproject.org> - 5.1.3-2
+- Autorebuild for GCC 4.3
+
 * Sat Jan 26 2008 Hans de Goede <j.w.r.degoede@hhs.nl> 5.1.3-1
 - New upstream release 5.1.3
 
