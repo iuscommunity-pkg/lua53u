@@ -1,6 +1,6 @@
 Name:           lua
 Version:        5.1.3
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Powerful light-weight programming language
 Group:          Development/Languages
 License:        MIT
@@ -53,6 +53,8 @@ sed -i 's/-lreadline -lncurses //g' etc/lua.pc
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 rm $RPM_BUILD_ROOT%{_libdir}/*.{la,a}
+mkdir -p $RPM_BUILD_ROOT%{_libdir}/lua/5.1
+mkdir -p $RPM_BUILD_ROOT%{_datadir}/lua/5.1
 
 
 %clean
@@ -65,6 +67,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/lua*
 %{_libdir}/liblua-*.so
 %{_mandir}/man1/lua*.1*
+%dir %{_libdir}/lua/5.1
+%dir %{_datadir}/lua/5.1
+
 
 %files devel
 %defattr(-,root,root,-)
@@ -75,6 +80,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Mar 14 2008 Tim Niemueller <tim@niemueller.de> - 5.1.3-3
+- own $libdir/lua/5.1 and $datadir/lua/5.1. These are the standard package
+  search path for Lua. Packaging them properly allows for easy creation of
+  Lua addon packages.
+
 * Tue Feb 19 2008 Fedora Release Engineering <rel-eng@fedoraproject.org> - 5.1.3-2
 - Autorebuild for GCC 4.3
 
