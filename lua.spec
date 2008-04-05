@@ -1,6 +1,6 @@
 Name:           lua
 Version:        5.1.3
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Powerful light-weight programming language
 Group:          Development/Languages
 License:        MIT
@@ -67,7 +67,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/lua*
 %{_libdir}/liblua-*.so
 %{_mandir}/man1/lua*.1*
+%dir %{_libdir}/lua
 %dir %{_libdir}/lua/5.1
+%dir %{_datadir}/lua
 %dir %{_datadir}/lua/5.1
 
 
@@ -80,6 +82,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Apr  5 2008 Hans de Goede <j.w.r.degoede@hhs.nl> 5.1.3-4
+- Not only own $libdir/lua/5.1 and $datadir/lua/5.1 but also $libdir/lua
+  and $datadir/lua for proper removal of these dirs upon lua removal
+
 * Fri Mar 14 2008 Tim Niemueller <tim@niemueller.de> - 5.1.3-3
 - own $libdir/lua/5.1 and $datadir/lua/5.1. These are the standard package
   search path for Lua. Packaging them properly allows for easy creation of
