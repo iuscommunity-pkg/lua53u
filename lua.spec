@@ -1,6 +1,6 @@
 Name:           lua
 Version:        5.1.3
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Powerful light-weight programming language
 Group:          Development/Languages
 License:        MIT
@@ -9,6 +9,7 @@ Source0:        http://www.lua.org/ftp/lua-%{version}.tar.gz
 Patch0:         lua-5.1.3-autotoolize.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  readline-devel ncurses-devel
+Provides:       lua = 5.1
 
 %description
 Lua is a powerful light-weight programming language designed for
@@ -82,6 +83,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Apr 13 2008 Tim Niemueller <tim@niemueller.de> - 5.1.3-5
+- Provide lua = 5.1, this way add-on packages can easily depend on the Lua
+  base version and expect certain paths for packages
+
 * Sat Apr  5 2008 Hans de Goede <j.w.r.degoede@hhs.nl> 5.1.3-4
 - Not only own $libdir/lua/5.1 and $datadir/lua/5.1 but also $libdir/lua
   and $datadir/lua for proper removal of these dirs upon lua removal
