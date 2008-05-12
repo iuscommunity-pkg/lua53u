@@ -1,6 +1,6 @@
 Name:           lua
 Version:        5.1.3
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Powerful light-weight programming language
 Group:          Development/Languages
 License:        MIT
@@ -31,6 +31,14 @@ Requires:       pkgconfig
 %description devel
 This package contains development files for %{name}.
 
+%package static
+Summary:        Static library for %{name}
+Group:          System Environment/Libraries
+Requires:       %{name} = %{version}-%{release}
+
+%description static
+This package contains the static version of liblua for %{name}.
+
 
 %prep
 %setup -q
@@ -53,7 +61,7 @@ sed -i 's/-lreadline -lncurses //g' etc/lua.pc
 %install
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
-rm $RPM_BUILD_ROOT%{_libdir}/*.{la,a}
+rm $RPM_BUILD_ROOT%{_libdir}/*.la
 mkdir -p $RPM_BUILD_ROOT%{_libdir}/lua/5.1
 mkdir -p $RPM_BUILD_ROOT%{_datadir}/lua/5.1
 
@@ -81,8 +89,14 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/liblua.so
 %{_libdir}/pkgconfig/*.pc
 
+%files static
+%defattr(-,root,root,-)
+%{_libdir}/*.a
 
 %changelog
+* Mon May 12 2008 Tim Niemueller <tim@niemueller.de> - 5.1.3-6
+- Add -static subpackage with static liblua, fixes rh bug #445939
+
 * Sun Apr 13 2008 Tim Niemueller <tim@niemueller.de> - 5.1.3-5
 - Provide lua = 5.1, this way add-on packages can easily depend on the Lua
   base version and expect certain paths for packages
