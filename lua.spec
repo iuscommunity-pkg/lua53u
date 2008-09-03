@@ -1,12 +1,12 @@
 Name:           lua
-Version:        5.1.3
-Release:        6%{?dist}
+Version:        5.1.4
+Release:        1%{?dist}
 Summary:        Powerful light-weight programming language
 Group:          Development/Languages
 License:        MIT
 URL:            http://www.lua.org/
 Source0:        http://www.lua.org/ftp/lua-%{version}.tar.gz
-Patch0:         lua-5.1.3-autotoolize.patch
+Patch0:         lua-5.1.4-autotoolize.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  readline-devel ncurses-devel
 Provides:       lua = 5.1
@@ -94,6 +94,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/*.a
 
 %changelog
+* Wed Sep 03 2008 Tim Niemueller <tim@niemueller.de> - 5.1.4-1
+- New upstream release 5.1.4
+
 * Mon May 12 2008 Tim Niemueller <tim@niemueller.de> - 5.1.3-6
 - Add -static subpackage with static liblua, fixes rh bug #445939
 
