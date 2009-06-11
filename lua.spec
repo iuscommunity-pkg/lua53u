@@ -1,6 +1,6 @@
 Name:           lua
 Version:        5.1.4
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Powerful light-weight programming language
 Group:          Development/Languages
 License:        MIT
@@ -53,7 +53,7 @@ sed -i 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
 sed -i 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
 # hack so that only /usr/bin/lua gets linked with readline as it is the
 # only one which needs this and otherwise we get License troubles
-make %{?_smp_mflags} LIBS="-ldl" luac_LDADD="liblua.la -lm -ldl"
+make %{?_smp_mflags} LIBS="-lm -ldl" luac_LDADD="liblua.la -lm -ldl"
 # also remove readline from lua.pc
 sed -i 's/-lreadline -lncurses //g' etc/lua.pc
 
@@ -94,6 +94,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/*.a
 
 %changelog
+* Thu Jun 11 2009 Tim Niemueller <tim@niemueller.de> - 5.1.4-2
+- Link liblua.so with -lm (math lib), fixes rhbz #499238
+
 * Wed Feb 25 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5.1.4-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_11_Mass_Rebuild
 
