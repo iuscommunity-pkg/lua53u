@@ -1,12 +1,13 @@
 Name:           lua
 Version:        5.1.4
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Powerful light-weight programming language
 Group:          Development/Languages
 License:        MIT
 URL:            http://www.lua.org/
 Source0:        http://www.lua.org/ftp/lua-%{version}.tar.gz
 Patch0:         lua-5.1.4-autotoolize.patch
+Patch1:         lua-5.1.4-lunatic.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  readline-devel ncurses-devel
 Provides:       lua = 5.1
@@ -43,6 +44,7 @@ This package contains the static version of liblua for %{name}.
 %prep
 %setup -q
 %patch0 -p1 -E -z .autoxxx
+%patch1 -p0 -z .lunatic
 # fix perms on auto files
 chmod u+x autogen.sh config.guess config.sub configure depcomp install-sh missing
 
@@ -94,6 +96,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/*.a
 
 %changelog
+* Sun May 09 2010 Tim Niemueller <tim@niemueller.de> - 5.1.4-5
+- Add patch regarding dlopen flags to support Lunatic (Lua-Python bridge)
+
 * Sat Jul 25 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5.1.4-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_12_Mass_Rebuild
 
