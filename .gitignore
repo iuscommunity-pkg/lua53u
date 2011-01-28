@@ -1,1 +1,6 @@
 lua-5.1.4.tar.gz
+lua-5.1.4/
+.build*
+*.src.rpm
+/x86_64/
+/i386/

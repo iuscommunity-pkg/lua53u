@@ -1,6 +1,6 @@
 Name:           lua
 Version:        5.1.4
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Powerful light-weight programming language
 Group:          Development/Languages
 License:        MIT
@@ -8,6 +8,7 @@ URL:            http://www.lua.org/
 Source0:        http://www.lua.org/ftp/lua-%{version}.tar.gz
 Patch0:         lua-5.1.4-autotoolize.patch
 Patch1:         lua-5.1.4-lunatic.patch
+Patch2:         lua-5.1.4-idsize.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  readline-devel ncurses-devel
 Provides:       lua = 5.1
@@ -45,6 +46,7 @@ This package contains the static version of liblua for %{name}.
 %setup -q
 %patch0 -p1 -E -z .autoxxx
 %patch1 -p0 -z .lunatic
+%patch2 -p1 -z .idsize
 # fix perms on auto files
 chmod u+x autogen.sh config.guess config.sub configure depcomp install-sh missing
 
@@ -96,6 +98,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/*.a
 
 %changelog
+* Fri Jan 28 2011 Tim Niemueller <tim@niemueller.de> - 5.1.4-6
+- Add patch to increase IDSIZE for more useful error messages
+
 * Sun May 09 2010 Tim Niemueller <tim@niemueller.de> - 5.1.4-5
 - Add patch regarding dlopen flags to support Lunatic (Lua-Python bridge)
 
