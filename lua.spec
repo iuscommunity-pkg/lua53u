@@ -1,6 +1,6 @@
 Name:           lua
 Version:        5.1.4
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Powerful light-weight programming language
 Group:          Development/Languages
 License:        MIT
@@ -9,6 +9,7 @@ Source0:        http://www.lua.org/ftp/lua-%{version}.tar.gz
 Patch0:         lua-5.1.4-autotoolize.patch
 Patch1:         lua-5.1.4-lunatic.patch
 Patch2:         lua-5.1.4-idsize.patch
+Patch3:         lua-5.1.4-2.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  readline-devel ncurses-devel
 Provides:       lua = 5.1
@@ -47,6 +48,7 @@ This package contains the static version of liblua for %{name}.
 %patch0 -p1 -E -z .autoxxx
 %patch1 -p0 -z .lunatic
 %patch2 -p1 -z .idsize
+%patch3 -p0 -d src -z .bugfix2
 # fix perms on auto files
 chmod u+x autogen.sh config.guess config.sub configure depcomp install-sh missing
 
@@ -98,6 +100,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/*.a
 
 %changelog
+* Fri Jan 28 2011 Tim Niemueller <tim@niemueller.de> - 5.1.4-7
+- Add patch to from lua.org with smaller bugfixes
+- sed -i -e 's/5\.1\.3/5.1.4/g' on autotoolize patch, bug #641144
+
 * Fri Jan 28 2011 Tim Niemueller <tim@niemueller.de> - 5.1.4-6
 - Add patch to increase IDSIZE for more useful error messages
 
