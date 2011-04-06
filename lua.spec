@@ -1,6 +1,6 @@
 Name:           lua
 Version:        5.1.4
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        Powerful light-weight programming language
 Group:          Development/Languages
 License:        MIT
@@ -13,6 +13,7 @@ Patch3:         lua-5.1.4-2.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  readline-devel ncurses-devel
 Provides:       lua = 5.1
+Provides:       lua(abi) = 5.1
 
 %description
 Lua is a powerful light-weight programming language designed for
@@ -100,6 +101,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/*.a
 
 %changelog
+* Wed Apr 06 2011 Tim Niemueller <tim@niemueller.de> - 5.1.4-9
+- Provide lua(abi) = 5.1 for better distro updates later
+
 * Tue Feb 08 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5.1.4-8
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
 
