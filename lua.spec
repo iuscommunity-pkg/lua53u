@@ -1,6 +1,6 @@
 Name:           lua
 Version:        5.1.4
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        Powerful light-weight programming language
 Group:          Development/Languages
 License:        MIT
@@ -101,6 +101,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/*.a
 
 %changelog
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5.1.4-10
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
 * Wed Apr 06 2011 Tim Niemueller <tim@niemueller.de> - 5.1.4-9
 - Provide lua(abi) = 5.1 for better distro updates later
 
