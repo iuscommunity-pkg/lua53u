@@ -4,7 +4,7 @@
 
 Name:           lua
 Version:        %{major_version}.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Powerful light-weight programming language
 Group:          Development/Languages
 License:        MIT
@@ -151,6 +151,9 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_datadir}/lua/%{legacy_major_version}
 
 %changelog
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5.2.2-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
 * Thu Apr 11 2013 Tom Callaway <spot@fedoraproject.org> - 5.2.2-1
 - update to 5.2.2
 - incorporate Aaron Faanes's changes
