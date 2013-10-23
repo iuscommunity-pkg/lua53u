@@ -11,9 +11,9 @@ diff -up lua-5.2.2/configure.ac.compat-module lua-5.2.2/configure.ac
 +  [use_compat_module=no]
 +)
 +
-+COMPAT_DEFS="#undef LUA_COMPAT_MODULE"
++COMPAT_DEFS="#undef LUA_COMPAT_ALL"
 +if test "x$use_compat_module" == "xyes"; then
-+  COMPAT_DEFS="#define LUA_COMPAT_MODULE"
++  COMPAT_DEFS="#define LUA_COMPAT_ALL"
 +fi
 +AC_SUBST(COMPAT_DEFS)
 +

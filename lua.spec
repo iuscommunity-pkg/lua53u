@@ -2,7 +2,7 @@
 
 Name:           lua
 Version:        %{major_version}.2
-Release:        3%{?dist}
+Release:        5%{?dist}
 Summary:        Powerful light-weight programming language
 Group:          Development/Languages
 License:        MIT
@@ -12,6 +12,7 @@ Patch0:         %{name}-%{version}-autotoolize.patch
 Patch1:         %{name}-%{version}-idsize.patch
 Patch2:         %{name}-%{version}-luac-shared-link-fix.patch
 Patch3:         %{name}-%{version}-configure-linux.patch
+Patch4:		%{name}-%{version}-configure-compat-module.patch
 BuildRequires:  automake autoconf libtool readline-devel ncurses-devel
 Provides:       lua(abi) = %{major_version}
 
@@ -50,6 +51,7 @@ mv src/luaconf.h src/luaconf.h.template.in
 %patch1 -p1 -z .idsize
 %patch2 -p1 -z .luac-shared
 %patch3 -p1 -z .configure-linux
+%patch4 -p1 -z .configure-compat-all
 autoreconf -i
 
 
@@ -94,6 +96,9 @@ mkdir -p $RPM_BUILD_ROOT%{_datadir}/lua/%{major_version}
 
 
 %changelog
+* Wed Oct 23 2013 Tom Callaway <spot@fedoraproject.org> - 5.2.2-5
+- readd and fix configure-compat-module.patch to use LUA_CONFIG_ALL instead
+
 * Wed Oct 23 2013 Tom Callaway <spot@fedoraproject.org> - 5.2.2-4
 - drop configure-compat-module.patch, if you really need old lua behavior, use compat-lua
 
