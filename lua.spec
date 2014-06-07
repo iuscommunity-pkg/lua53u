@@ -2,7 +2,7 @@
 
 Name:           lua
 Version:        %{major_version}.2
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Powerful light-weight programming language
 Group:          Development/Languages
 License:        MIT
@@ -96,6 +96,9 @@ mkdir -p $RPM_BUILD_ROOT%{_datadir}/lua/%{major_version}
 
 
 %changelog
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5.2.2-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
 * Wed Oct 23 2013 Tom Callaway <spot@fedoraproject.org> - 5.2.2-5
 - readd and fix configure-compat-module.patch to use LUA_CONFIG_ALL instead
 
