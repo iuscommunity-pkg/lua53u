@@ -2,12 +2,14 @@
 
 Name:           lua
 Version:        %{major_version}.2
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Powerful light-weight programming language
 Group:          Development/Languages
 License:        MIT
 URL:            http://www.lua.org/
 Source0:        http://www.lua.org/ftp/lua-%{version}.tar.gz
+# copied from doc/readme.html on 2014-07-18
+Source1:	mit.txt
 Patch0:         %{name}-%{version}-autotoolize.patch
 Patch1:         %{name}-%{version}-idsize.patch
 Patch2:         %{name}-%{version}-luac-shared-link-fix.patch
@@ -46,6 +48,7 @@ This package contains the static version of liblua for %{name}.
 
 %prep
 %setup -q
+cp %{SOURCE1} .
 mv src/luaconf.h src/luaconf.h.template.in
 %patch0 -p1 -E -z .autoxxx
 %patch1 -p1 -z .idsize
@@ -75,6 +78,8 @@ mkdir -p $RPM_BUILD_ROOT%{_datadir}/lua/%{major_version}
 
 
 %files
+%{!?_licensedir:%global license %%doc}
+%license mit.txt
 %doc README doc/*.html doc/*.css doc/*.gif doc/*.png
 %{_bindir}/lua
 %{_bindir}/luac
@@ -96,6 +101,9 @@ mkdir -p $RPM_BUILD_ROOT%{_datadir}/lua/%{major_version}
 
 
 %changelog
+* Fri Jul 18 2014 Tom Callaway <spot@fedoraproject.org> - 5.2.2-7
+- fix license handling
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5.2.2-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
