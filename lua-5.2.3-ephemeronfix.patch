@@ -1,0 +1,12 @@
+diff -up lua-5.2.3/src/lgc.c.ephemeronfix lua-5.2.3/src/lgc.c
+--- lua-5.2.3/src/lgc.c.ephemeronfix	2014-12-10 16:15:14.482402404 -0500
++++ lua-5.2.3/src/lgc.c	2014-12-10 16:15:49.715167635 -0500
+@@ -403,7 +403,7 @@ static int traverseephemeron (global_Sta
+       reallymarkobject(g, gcvalue(gval(n)));  /* mark it now */
+     }
+   }
+-  if (prop)
++  if (g->gcstate != GCSatomic || prop)
+     linktable(h, &g->ephemeron);  /* have to propagate again */
+   else if (hasclears)  /* does table have white keys? */
+     linktable(h, &g->allweak);  /* may have to clean white keys */

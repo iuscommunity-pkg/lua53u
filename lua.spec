@@ -1,8 +1,8 @@
 %global major_version 5.2
 
 Name:           lua
-Version:        %{major_version}.2
-Release:        8%{?dist}
+Version:        %{major_version}.3
+Release:        1%{?dist}
 Summary:        Powerful light-weight programming language
 Group:          Development/Languages
 License:        MIT
@@ -10,11 +10,13 @@ URL:            http://www.lua.org/
 Source0:        http://www.lua.org/ftp/lua-%{version}.tar.gz
 # copied from doc/readme.html on 2014-07-18
 Source1:	mit.txt
-Patch0:         %{name}-%{version}-autotoolize.patch
-Patch1:         %{name}-%{version}-idsize.patch
-Patch2:         %{name}-%{version}-luac-shared-link-fix.patch
-Patch3:         %{name}-%{version}-configure-linux.patch
-Patch4:		%{name}-%{version}-configure-compat-module.patch
+Patch0:         %{name}-5.2.2-autotoolize.patch
+Patch1:         %{name}-5.2.2-idsize.patch
+Patch2:         %{name}-5.2.2-luac-shared-link-fix.patch
+Patch3:         %{name}-5.2.2-configure-linux.patch
+Patch4:		%{name}-5.2.2-configure-compat-module.patch
+# http://www.lua.org/bugs.html
+Patch5:		lua-5.2.3-ephemeronfix.patch
 BuildRequires:  automake autoconf libtool readline-devel ncurses-devel
 Provides:       lua(abi) = %{major_version}
 
@@ -55,6 +57,7 @@ mv src/luaconf.h src/luaconf.h.template.in
 %patch2 -p1 -z .luac-shared
 %patch3 -p1 -z .configure-linux
 %patch4 -p1 -z .configure-compat-all
+%patch5 -p1 -b .ephemeronfix
 autoreconf -i
 
 
@@ -101,6 +104,9 @@ mkdir -p $RPM_BUILD_ROOT%{_datadir}/lua/%{major_version}
 
 
 %changelog
+* Wed Dec 10 2014 Tom Callaway <spot@fedoraproject.org> - 5.2.3-1
+- update to 5.2.3
+
 * Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5.2.2-8
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
 
