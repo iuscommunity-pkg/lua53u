@@ -9,7 +9,7 @@
 
 Name:           lua
 Version:        %{major_version}.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Powerful light-weight programming language
 Group:          Development/Languages
 License:        MIT
@@ -159,6 +159,10 @@ popd
 
 
 %changelog
+* Sat Feb 21 2015 Till Maas <opensource@till.name> - 5.3.0-2
+- Rebuilt for Fedora 23 Change
+  https://fedoraproject.org/wiki/Changes/Harden_all_packages_with_position-independent_code
+
 * Thu Jan 15 2015 Tom Callaway <spot@fedoraproject.org> - 5.3.0-1
 - update to 5.3.0
 - add bootstrapping glue
