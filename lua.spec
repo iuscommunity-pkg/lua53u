@@ -9,7 +9,7 @@
 
 Name:           lua
 Version:        %{major_version}.0
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Powerful light-weight programming language
 Group:          Development/Languages
 License:        MIT
@@ -159,6 +159,9 @@ popd
 
 
 %changelog
+* Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5.3.0-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
 * Fri Mar 20 2015 Kalev Lember <kalevlember@gmail.com> - 5.3.0-3
 - Define LUA_COMPAT_5_2 in addition to LUA_COMPAT_5_1 (#1204129)
 
