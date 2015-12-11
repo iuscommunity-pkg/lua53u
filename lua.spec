@@ -8,28 +8,29 @@
 
 
 Name:           lua
-Version:        %{major_version}.0
-Release:        4%{?dist}
+Version:        %{major_version}.2
+Release:        1%{?dist}
 Summary:        Powerful light-weight programming language
 Group:          Development/Languages
 License:        MIT
 URL:            http://www.lua.org/
 Source0:        http://www.lua.org/ftp/lua-%{version}.tar.gz
 # copied from doc/readme.html on 2014-07-18
-Source1:	mit.txt
+Source1:        mit.txt
 %if 0%{?bootstrap}
-Source2:	http://www.lua.org/ftp/lua-%{bootstrap_version}.tar.gz
+Source2:        http://www.lua.org/ftp/lua-%{bootstrap_version}.tar.gz
 %endif
+Source3:        http://www.lua.org/tests/lua-%{version}-tests.tar.gz
 Patch0:         %{name}-5.3.0-autotoolize.patch
 Patch1:         %{name}-5.3.0-idsize.patch
-Patch2:         %{name}-5.3.0-luac-shared-link-fix.patch
+#Patch2:         %%{name}-5.3.0-luac-shared-link-fix.patch
 Patch3:         %{name}-5.2.2-configure-linux.patch
-Patch4:		%{name}-5.3.0-configure-compat-module.patch
+Patch4:         %{name}-5.3.0-configure-compat-module.patch
 %if 0%{?bootstrap}
-Patch5:		%{name}-5.2.3-autotoolize.patch
-Patch6:		%{name}-5.2.2-idsize.patch
-Patch7:		%{name}-5.2.2-luac-shared-link-fix.patch
-Patch8:		%{name}-5.2.2-configure-compat-module.patch
+Patch5:         %{name}-5.2.3-autotoolize.patch
+Patch6:         %{name}-5.2.2-idsize.patch
+Patch7:         %{name}-5.2.2-luac-shared-link-fix.patch
+Patch8:         %{name}-5.2.2-configure-compat-module.patch
 %endif
 
 BuildRequires:  automake autoconf libtool readline-devel ncurses-devel
@@ -64,12 +65,12 @@ This package contains the static version of liblua for %{name}.
 
 
 %prep
-%setup -q -a 2
+%setup -q -a 2 -a 3
 cp %{SOURCE1} .
 mv src/luaconf.h src/luaconf.h.template.in
 %patch0 -p1 -E -z .autoxxx
 %patch1 -p1 -z .idsize
-%patch2 -p1 -z .luac-shared
+#%% patch2 -p1 -z .luac-shared
 %patch3 -p1 -z .configure-linux
 %patch4 -p1 -z .configure-compat-all
 autoreconf -i
@@ -96,7 +97,8 @@ sed -i 's|@pkgdatadir@|%{_datadir}|g' src/luaconf.h.template
 
 # hack so that only /usr/bin/lua gets linked with readline as it is the
 # only one which needs this and otherwise we get License troubles
-make %{?_smp_mflags} LIBS="-lm -ldl" luac_LDADD="liblua.la -lm -ldl"
+make %{?_smp_mflags} LIBS="-lm -ldl"
+# only /usr/bin/lua links with readline now #luac_LDADD="liblua.la -lm -ldl"
 
 %if 0%{?bootstrap}
 pushd lua-%{bootstrap_version}
@@ -111,6 +113,25 @@ sed -i 's|@pkgdatadir@|%{_datadir}|g' src/luaconf.h.template
 make %{?_smp_mflags} LIBS="-lm -ldl" luac_LDADD="liblua.la -lm -ldl"
 popd
 %endif
+
+%check
+cd ./lua-%{version}-tests/
+
+# Dont skip the fully portable or ram-hungry tests:
+# sed -i.orig -e '
+#     /attrib.lua/d;
+#     /files.lua/d;
+#     /db.lua/d;
+#     /errors.lua/d;
+#     ' all.lua
+# LD_LIBRARY_PATH=$RPM_BUILD_ROOT/%{_libdir} $RPM_BUILD_ROOT/%{_bindir}/lua all.lua
+
+# Removing tests that fail under mock/koji
+sed -i.orig -e '
+    /db.lua/d;
+    /errors.lua/d;
+    ' all.lua
+LD_LIBRARY_PATH=$RPM_BUILD_ROOT/%{_libdir} $RPM_BUILD_ROOT/%{_bindir}/lua -e"_U=true" all.lua
 
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
@@ -159,6 +180,10 @@ popd
 
 
 %changelog
+* Fri Dec 11 2015 "D. Johnson" <fenris02@fedoraproject.org> - 5.3.2-1
+- Update to 5.3.2 (#1039249,1173984)
+- Added upstream test suite to verify build
+
 * Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5.3.0-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 
