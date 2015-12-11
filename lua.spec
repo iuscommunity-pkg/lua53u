@@ -182,7 +182,6 @@ popd
 %changelog
 * Fri Dec 11 2015 "D. Johnson" <fenris02@fedoraproject.org> - 5.3.2-1
 - Update to 5.3.2 (#1039249,1173984)
-- Added upstream test suite to verify build
 
 * Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5.3.0-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
