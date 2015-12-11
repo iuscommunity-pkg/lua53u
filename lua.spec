@@ -9,7 +9,7 @@
 
 Name:           lua
 Version:        %{major_version}.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Powerful light-weight programming language
 Group:          Development/Languages
 License:        MIT
@@ -21,6 +21,8 @@ Source1:        mit.txt
 Source2:        http://www.lua.org/ftp/lua-%{bootstrap_version}.tar.gz
 %endif
 Source3:        http://www.lua.org/tests/lua-%{version}-tests.tar.gz
+# multilib
+Source4:        luaconf.h
 Patch0:         %{name}-5.3.0-autotoolize.patch
 Patch1:         %{name}-5.3.0-idsize.patch
 #Patch2:         %%{name}-5.3.0-luac-shared-link-fix.patch
@@ -139,6 +141,11 @@ rm $RPM_BUILD_ROOT%{_libdir}/*.la
 mkdir -p $RPM_BUILD_ROOT%{_libdir}/lua/%{major_version}
 mkdir -p $RPM_BUILD_ROOT%{_datadir}/lua/%{major_version}
 
+# Rename luaconf.h to luaconf-<arch>.h to avoid file conflicts on
+# multilib systems and install luaconf.h wrapper
+mv %{buildroot}%{_includedir}/luaconf.h %{buildroot}%{_includedir}/luaconf-%{_arch}.h
+install -p -m 644 %{SOURCE4} %{buildroot}%{_includedir}/luaconf.h
+
 %if 0%{?bootstrap}
 pushd lua-%{bootstrap_version}
 mkdir $RPM_BUILD_ROOT/installdir
@@ -180,6 +187,9 @@ popd
 
 
 %changelog
+* Fri Dec 11 2015 Tom Callaway <spot@fedoraproject.org> - 5.3.2-2
+- fix multilib support (#1229992)
+
 * Fri Dec 11 2015 "D. Johnson" <fenris02@fedoraproject.org> - 5.3.2-1
 - Update to 5.3.2 (#1039249,1173984)
 
