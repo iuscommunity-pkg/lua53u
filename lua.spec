@@ -8,8 +8,8 @@
 
 
 Name:           lua
-Version:        %{major_version}.2
-Release:        3%{?dist}
+Version:        %{major_version}.3
+Release:        1%{?dist}
 Summary:        Powerful light-weight programming language
 Group:          Development/Languages
 License:        MIT
@@ -187,6 +187,9 @@ popd
 
 
 %changelog
+* Tue Jun  7 2016 Tom Callaway <spot@fedoraproject.org> - 5.3.3-1
+- update to 5.3.3
+
 * Thu Feb 04 2016 Fedora Release Engineering <releng@fedoraproject.org> - 5.3.2-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_24_Mass_Rebuild
 
