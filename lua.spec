@@ -9,7 +9,7 @@
 
 Name:           lua
 Version:        %{major_version}.3
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Powerful light-weight programming language
 Group:          Development/Languages
 License:        MIT
@@ -34,6 +34,10 @@ Patch6:         %{name}-5.2.2-idsize.patch
 Patch7:         %{name}-5.2.2-luac-shared-link-fix.patch
 Patch8:         %{name}-5.2.2-configure-compat-module.patch
 %endif
+# https://www.lua.org/bugs.html#5.3.3-1
+Patch9:		lua-5.3.3-upstream-bug-1.patch
+# https://www.lua.org/bugs.html#5.3.3-2
+Patch10:	lua-5.3.3-upstream-bug-2.patch
 
 BuildRequires:  automake autoconf libtool readline-devel ncurses-devel
 Provides:       lua(abi) = %{major_version}
@@ -75,6 +79,8 @@ mv src/luaconf.h src/luaconf.h.template.in
 #%% patch2 -p1 -z .luac-shared
 %patch3 -p1 -z .configure-linux
 %patch4 -p1 -z .configure-compat-all
+%patch9 -p1 -b .crashfix
+%patch10 -p1 -b .readpast
 autoreconf -i
 
 %if 0%{?bootstrap}
@@ -187,6 +193,9 @@ popd
 
 
 %changelog
+* Mon Jul 25 2016 Tom Callaway <spot@fedoraproject.org> - 5.3.3-2
+- apply fixes for upstream bug 1 & 2
+
 * Tue Jun  7 2016 Tom Callaway <spot@fedoraproject.org> - 5.3.3-1
 - update to 5.3.3
 
