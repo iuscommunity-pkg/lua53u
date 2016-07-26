@@ -2,14 +2,14 @@
 # If you are incrementing major_version, enable bootstrapping and adjust accordingly.
 # Version should be the latest prior build. If you don't do this, RPM will break and
 # everything will grind to a halt.
-%global bootstrap 1
+%global bootstrap 0
 %global bootstrap_major_version 5.2
 %global bootstrap_version %{bootstrap_major_version}.3
 
 
 Name:           lua
 Version:        %{major_version}.3
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Powerful light-weight programming language
 Group:          Development/Languages
 License:        MIT
@@ -41,6 +41,7 @@ Patch10:	lua-5.3.3-upstream-bug-2.patch
 
 BuildRequires:  automake autoconf libtool readline-devel ncurses-devel
 Provides:       lua(abi) = %{major_version}
+Requires:       lua-libs = %{version}-%{release}
 
 %description
 Lua is a powerful light-weight programming language designed for
@@ -60,6 +61,12 @@ Requires:       pkgconfig
 
 %description devel
 This package contains development files for %{name}.
+
+%package libs
+Summary:        Libraries for %{name}
+
+%description libs
+This package contains the shared libraries for %{name}.
 
 %package static
 Summary:        Static library for %{name}
@@ -170,9 +177,7 @@ popd
 %doc README doc/*.html doc/*.css doc/*.gif doc/*.png
 %{_bindir}/lua
 %{_bindir}/luac
-%{_libdir}/liblua-%{major_version}.so
 %if 0%{?bootstrap}
-%{_libdir}/liblua-%{bootstrap_major_version}.so
 %dir %{_libdir}/lua/%{bootstrap_major_version}
 %dir %{_datadir}/lua/%{bootstrap_major_version}
 %endif
@@ -181,6 +186,12 @@ popd
 %dir %{_libdir}/lua/%{major_version}
 %dir %{_datadir}/lua
 %dir %{_datadir}/lua/%{major_version}
+
+%files libs
+%{_libdir}/liblua-%{major_version}.so
+%if 0%{?bootstrap}
+%{_libdir}/liblua-%{bootstrap_major_version}.so
+%endif
 
 %files devel
 %{_includedir}/l*.h
@@ -193,6 +204,10 @@ popd
 
 
 %changelog
+* Tue Jul 26 2016 Tom Callaway <spot@fedoraproject.org> - 5.3.3-3
+- create lua-libs subpackage
+- disable bootstrap
+
 * Mon Jul 25 2016 Tom Callaway <spot@fedoraproject.org> - 5.3.3-2
 - apply fixes for upstream bug 1 & 2
 
