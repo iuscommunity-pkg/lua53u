@@ -78,7 +78,11 @@ This package contains the static version of liblua for %{name}.
 
 
 %prep
+%if 0%{?bootstrap}
 %setup -q -a 2 -a 3
+%else
+%setup -q -a 3
+%endif
 cp %{SOURCE1} .
 mv src/luaconf.h src/luaconf.h.template.in
 %patch0 -p1 -E -z .autoxxx
