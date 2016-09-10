@@ -52,6 +52,8 @@
 #include "luaconf-mipsel.h"
 #elif defined(__mips)
 #include "luaconf-mips.h"
+#elif defined(__riscv__)
+#include "luaconf-riscv64.h"
 #else
 #error "The lua-devel package is not usable with the architecture."
 #endif
