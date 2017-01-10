@@ -21,6 +21,7 @@ Patch4:         lua-5.3.0-configure-compat-module.patch
 Patch9:         lua-5.3.3-upstream-bug-1.patch
 # https://www.lua.org/bugs.html#5.3.3-2
 Patch10:        lua-5.3.3-upstream-bug-2.patch
+Patch20:        lua-5.3.3-pc-compat.patch
 
 BuildRequires:  automake autoconf libtool readline-devel ncurses-devel
 Provides:       lua(abi) = %{major_version}
@@ -77,6 +78,7 @@ mv src/luaconf.h src/luaconf.h.template.in
 %patch4 -p1 -z .configure-compat-all
 %patch9 -p1 -b .crashfix
 %patch10 -p1 -b .readpast
+%patch20 -p1
 autoreconf -i
 
 
@@ -101,7 +103,7 @@ sed -i.orig -e '
     /db.lua/d;
     /errors.lua/d;
     ' all.lua
-LD_LIBRARY_PATH=%{buildroot}%{_libdir} %{buildroot}%{_bindir}/lua -e"_U=true" all.lua
+LD_LIBRARY_PATH=%{buildroot}%{_libdir} %{buildroot}%{_bindir}/lua-%{major_version} -e"_U=true" all.lua
 
 
 %install
@@ -110,18 +112,29 @@ rm %{buildroot}%{_libdir}/*.la
 mkdir -p %{buildroot}%{_libdir}/lua/%{major_version}
 mkdir -p %{buildroot}%{_datadir}/lua/%{major_version}
 
+mv %{buildroot}%{_bindir}/lua{,-%{major_version}}
+mv %{buildroot}%{_bindir}/luac{,-%{major_version}}
+mv %{buildroot}%{_mandir}/man1/lua{,-%{major_version}}.1
+mv %{buildroot}%{_mandir}/man1/luac{,-%{major_version}}.1
+mv %{buildroot}%{_libdir}/pkgconfig/lua{,-%{major_version}}.pc
+mv %{buildroot}%{_libdir}/liblua{,-%{major_version}}.a
+rm %{buildroot}%{_libdir}/liblua.so
+mkdir -p %{buildroot}%{_includedir}/lua-%{major_version}
+mv %{buildroot}%{_includedir}/l*h* %{buildroot}%{_includedir}/lua-%{major_version}
+
 # Rename luaconf.h to luaconf-<arch>.h to avoid file conflicts on
 # multilib systems and install luaconf.h wrapper
-mv %{buildroot}%{_includedir}/luaconf.h %{buildroot}%{_includedir}/luaconf-%{_arch}.h
-install -p -m 644 %{SOURCE4} %{buildroot}%{_includedir}/luaconf.h
+mv %{buildroot}%{_includedir}/lua-%{major_version}/luaconf{,-%{_arch}}.h
+install -p -m 644 %{SOURCE4} %{buildroot}%{_includedir}/lua-%{major_version}/luaconf.h
 
 
 %files
 %license mit.txt
 %doc README doc/*.html doc/*.css doc/*.gif doc/*.png
-%{_bindir}/lua
-%{_bindir}/luac
-%{_mandir}/man1/lua*.1*
+%{_bindir}/lua-%{major_version}
+%{_bindir}/luac-%{major_version}
+%{_mandir}/man1/lua-%{major_version}.1*
+%{_mandir}/man1/luac-%{major_version}.1*
 %dir %{_libdir}/lua
 %dir %{_libdir}/lua/%{major_version}
 %dir %{_datadir}/lua
@@ -133,20 +146,19 @@ install -p -m 644 %{SOURCE4} %{buildroot}%{_includedir}/luaconf.h
 
 
 %files devel
-%{_includedir}/l*.h
-%{_includedir}/l*.hpp
-%{_libdir}/liblua.so
-%{_libdir}/pkgconfig/*.pc
+%{_includedir}/lua-%{major_version}
+%{_libdir}/pkgconfig/lua-%{major_version}.pc
 
 
 %files static
-%{_libdir}/*.a
+%{_libdir}/liblua-%{major_version}.a
 
 
 %changelog
 * Tue Jan 10 2017 Carl George <carl.george@rackspace.com> - 5.3.3-1.ius
 - Port from Fedora to IUS
 - Remove bootstrap components
+- Rename files to be parallel with stock
 
 * Tue Jul 26 2016 Tom Callaway <spot@fedoraproject.org> - 5.3.3-3
 - create lua-libs subpackage

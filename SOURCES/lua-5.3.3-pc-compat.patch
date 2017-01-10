@@ -1,0 +1,11 @@
+diff -Naurp a/src/lua.pc.in b/src/lua.pc.in
+--- a/src/lua.pc.in	2017-01-09 14:12:42.683149286 -0600
++++ b/src/lua.pc.in	2017-01-09 19:45:48.024293279 -0600
+@@ -9,5 +9,5 @@ Name: Lua
+ Description: An Extensible Extension Language
+ Version: ${R}
+ Requires:
+-Libs: -llua @LUA_LIBS@
+-Cflags: -I${includedir}
++Libs: -llua-${V} @LUA_LIBS@
++Cflags: -I${includedir}/lua-${V}
