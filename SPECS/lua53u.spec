@@ -128,6 +128,10 @@ mv %{buildroot}%{_includedir}/lua-%{major_version}/luaconf{,-%{_arch}}.h
 install -p -m 644 %{SOURCE4} %{buildroot}%{_includedir}/lua-%{major_version}/luaconf.h
 
 
+%post libs -p /sbin/ldconfig
+%postun libs -p /sbin/ldconfig
+
+
 %files
 %license mit.txt
 %doc README doc/*.html doc/*.css doc/*.gif doc/*.png
@@ -159,6 +163,7 @@ install -p -m 644 %{SOURCE4} %{buildroot}%{_includedir}/lua-%{major_version}/lua
 - Port from Fedora to IUS
 - Remove bootstrap components
 - Rename files to be parallel with stock
+- Add ldconfig scriptlets
 
 * Tue Jul 26 2016 Tom Callaway <spot@fedoraproject.org> - 5.3.3-3
 - create lua-libs subpackage
