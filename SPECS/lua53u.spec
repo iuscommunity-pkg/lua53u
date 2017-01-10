@@ -7,9 +7,9 @@
 %global bootstrap_version %{bootstrap_major_version}.3
 
 
-Name:           lua
+Name:           lua53u
 Version:        %{major_version}.3
-Release:        3%{?dist}
+Release:        1.ius%{?dist}
 Summary:        Powerful light-weight programming language
 Group:          Development/Languages
 License:        MIT
@@ -23,25 +23,25 @@ Source2:        http://www.lua.org/ftp/lua-%{bootstrap_version}.tar.gz
 Source3:        http://www.lua.org/tests/lua-%{version}-tests.tar.gz
 # multilib
 Source4:        luaconf.h
-Patch0:         %{name}-5.3.0-autotoolize.patch
-Patch1:         %{name}-5.3.0-idsize.patch
-#Patch2:         %%{name}-5.3.0-luac-shared-link-fix.patch
-Patch3:         %{name}-5.2.2-configure-linux.patch
-Patch4:         %{name}-5.3.0-configure-compat-module.patch
+Patch0:         lua-5.3.0-autotoolize.patch
+Patch1:         lua-5.3.0-idsize.patch
+Patch3:         lua-5.2.2-configure-linux.patch
+Patch4:         lua-5.3.0-configure-compat-module.patch
 %if 0%{?bootstrap}
-Patch5:         %{name}-5.2.3-autotoolize.patch
-Patch6:         %{name}-5.2.2-idsize.patch
-Patch7:         %{name}-5.2.2-luac-shared-link-fix.patch
-Patch8:         %{name}-5.2.2-configure-compat-module.patch
+Patch5:         lua-5.2.3-autotoolize.patch
+Patch6:         lua-5.2.2-idsize.patch
+Patch7:         lua-5.2.2-luac-shared-link-fix.patch
+Patch8:         lua-5.2.2-configure-compat-module.patch
 %endif
 # https://www.lua.org/bugs.html#5.3.3-1
-Patch9:		lua-5.3.3-upstream-bug-1.patch
+Patch9:         lua-5.3.3-upstream-bug-1.patch
 # https://www.lua.org/bugs.html#5.3.3-2
-Patch10:	lua-5.3.3-upstream-bug-2.patch
+Patch10:        lua-5.3.3-upstream-bug-2.patch
 
 BuildRequires:  automake autoconf libtool readline-devel ncurses-devel
 Provides:       lua(abi) = %{major_version}
-Requires:       lua-libs = %{version}-%{release}
+Requires:       %{name}-libs%{?_isa} = %{version}-%{release}
+
 
 %description
 Lua is a powerful light-weight programming language designed for
@@ -53,41 +53,42 @@ is dynamically typed, interpreted from bytecodes, and has automatic
 memory management with garbage collection, making it ideal for
 configuration, scripting, and rapid prototyping.
 
+
 %package devel
 Summary:        Development files for %{name}
 Group:          System Environment/Libraries
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 Requires:       pkgconfig
 
+
 %description devel
 This package contains development files for %{name}.
+
 
 %package libs
 Summary:        Libraries for %{name}
 
+
 %description libs
 This package contains the shared libraries for %{name}.
+
 
 %package static
 Summary:        Static library for %{name}
 Group:          System Environment/Libraries
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
+
 %description static
 This package contains the static version of liblua for %{name}.
 
 
 %prep
-%if 0%{?bootstrap}
-%setup -q -a 2 -a 3
-%else
-%setup -q -a 3
-%endif
+%setup -q -n lua-%{version} -a 3
 cp %{SOURCE1} .
 mv src/luaconf.h src/luaconf.h.template.in
 %patch0 -p1 -E -z .autoxxx
 %patch1 -p1 -z .idsize
-#%% patch2 -p1 -z .luac-shared
 %patch3 -p1 -z .configure-linux
 %patch4 -p1 -z .configure-compat-all
 %patch9 -p1 -b .crashfix
@@ -133,30 +134,23 @@ make %{?_smp_mflags} LIBS="-lm -ldl" luac_LDADD="liblua.la -lm -ldl"
 popd
 %endif
 
+
 %check
 cd ./lua-%{version}-tests/
-
-# Dont skip the fully portable or ram-hungry tests:
-# sed -i.orig -e '
-#     /attrib.lua/d;
-#     /files.lua/d;
-#     /db.lua/d;
-#     /errors.lua/d;
-#     ' all.lua
-# LD_LIBRARY_PATH=$RPM_BUILD_ROOT/%{_libdir} $RPM_BUILD_ROOT/%{_bindir}/lua all.lua
 
 # Removing tests that fail under mock/koji
 sed -i.orig -e '
     /db.lua/d;
     /errors.lua/d;
     ' all.lua
-LD_LIBRARY_PATH=$RPM_BUILD_ROOT/%{_libdir} $RPM_BUILD_ROOT/%{_bindir}/lua -e"_U=true" all.lua
+LD_LIBRARY_PATH=%{buildroot}%{_libdir} %{buildroot}%{_bindir}/lua -e"_U=true" all.lua
+
 
 %install
-make install DESTDIR=$RPM_BUILD_ROOT
-rm $RPM_BUILD_ROOT%{_libdir}/*.la
-mkdir -p $RPM_BUILD_ROOT%{_libdir}/lua/%{major_version}
-mkdir -p $RPM_BUILD_ROOT%{_datadir}/lua/%{major_version}
+make install DESTDIR=%{buildroot}
+rm %{buildroot}%{_libdir}/*.la
+mkdir -p %{buildroot}%{_libdir}/lua/%{major_version}
+mkdir -p %{buildroot}%{_datadir}/lua/%{major_version}
 
 # Rename luaconf.h to luaconf-<arch>.h to avoid file conflicts on
 # multilib systems and install luaconf.h wrapper
@@ -165,19 +159,18 @@ install -p -m 644 %{SOURCE4} %{buildroot}%{_includedir}/luaconf.h
 
 %if 0%{?bootstrap}
 pushd lua-%{bootstrap_version}
-mkdir $RPM_BUILD_ROOT/installdir
-make install DESTDIR=$RPM_BUILD_ROOT/installdir
-cp -a $RPM_BUILD_ROOT/installdir/%{_libdir}/liblua-%{bootstrap_major_version}.so $RPM_BUILD_ROOT%{_libdir}/
-mkdir -p $RPM_BUILD_ROOT%{_libdir}/lua/%{bootstrap_major_version}
-mkdir -p $RPM_BUILD_ROOT%{_datadir}/lua/%{bootstrap_major_version}
-rm -rf $RPM_BUILD_ROOT/installdir
+mkdir %{buildroot}/installdir
+make install DESTDIR=%{buildroot}/installdir
+cp -a %{buildroot}/installdir/%{_libdir}/liblua-%{bootstrap_major_version}.so %{buildroot}%{_libdir}/
+mkdir -p %{buildroot}%{_libdir}/lua/%{bootstrap_major_version}
+mkdir -p %{buildroot}%{_datadir}/lua/%{bootstrap_major_version}
+rm -rf %{buildroot}/installdir
 popd
 %endif
 
-%files
-%{!?_licensedir:%global license %%doc}
-%license mit.txt
 
+%files
+%license mit.txt
 %doc README doc/*.html doc/*.css doc/*.gif doc/*.png
 %{_bindir}/lua
 %{_bindir}/luac
@@ -191,11 +184,13 @@ popd
 %dir %{_datadir}/lua
 %dir %{_datadir}/lua/%{major_version}
 
+
 %files libs
 %{_libdir}/liblua-%{major_version}.so
 %if 0%{?bootstrap}
 %{_libdir}/liblua-%{bootstrap_major_version}.so
 %endif
+
 
 %files devel
 %{_includedir}/l*.h
@@ -203,11 +198,15 @@ popd
 %{_libdir}/liblua.so
 %{_libdir}/pkgconfig/*.pc
 
+
 %files static
 %{_libdir}/*.a
 
 
 %changelog
+* Tue Jan 10 2017 Carl George <carl.george@rackspace.com> - 5.3.3-1.ius
+- Port from Fedora to IUS
+
 * Tue Jul 26 2016 Tom Callaway <spot@fedoraproject.org> - 5.3.3-3
 - create lua-libs subpackage
 - disable bootstrap
