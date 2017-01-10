@@ -1,11 +1,4 @@
 %global major_version 5.3
-# If you are incrementing major_version, enable bootstrapping and adjust accordingly.
-# Version should be the latest prior build. If you don't do this, RPM will break and
-# everything will grind to a halt.
-%global bootstrap 0
-%global bootstrap_major_version 5.2
-%global bootstrap_version %{bootstrap_major_version}.3
-
 
 Name:           lua53u
 Version:        %{major_version}.3
@@ -17,9 +10,6 @@ URL:            http://www.lua.org/
 Source0:        http://www.lua.org/ftp/lua-%{version}.tar.gz
 # copied from doc/readme.html on 2014-07-18
 Source1:        mit.txt
-%if 0%{?bootstrap}
-Source2:        http://www.lua.org/ftp/lua-%{bootstrap_version}.tar.gz
-%endif
 Source3:        http://www.lua.org/tests/lua-%{version}-tests.tar.gz
 # multilib
 Source4:        luaconf.h
@@ -27,12 +17,6 @@ Patch0:         lua-5.3.0-autotoolize.patch
 Patch1:         lua-5.3.0-idsize.patch
 Patch3:         lua-5.2.2-configure-linux.patch
 Patch4:         lua-5.3.0-configure-compat-module.patch
-%if 0%{?bootstrap}
-Patch5:         lua-5.2.3-autotoolize.patch
-Patch6:         lua-5.2.2-idsize.patch
-Patch7:         lua-5.2.2-luac-shared-link-fix.patch
-Patch8:         lua-5.2.2-configure-compat-module.patch
-%endif
 # https://www.lua.org/bugs.html#5.3.3-1
 Patch9:         lua-5.3.3-upstream-bug-1.patch
 # https://www.lua.org/bugs.html#5.3.3-2
@@ -95,18 +79,6 @@ mv src/luaconf.h src/luaconf.h.template.in
 %patch10 -p1 -b .readpast
 autoreconf -i
 
-%if 0%{?bootstrap}
-cd lua-%{bootstrap_version}/
-mv src/luaconf.h src/luaconf.h.template.in
-%patch5 -p1 -b .autoxxx
-%patch6 -p1 -b .idsize
-%patch7 -p1 -b .luac-shared
-%patch3 -p1 -z .configure-linux
-%patch8 -p1 -z .configure-compat-all
-autoreconf -i
-cd ..
-%endif
-
 
 %build
 %configure --with-readline --with-compat-module
@@ -119,20 +91,6 @@ sed -i 's|@pkgdatadir@|%{_datadir}|g' src/luaconf.h.template
 # only one which needs this and otherwise we get License troubles
 make %{?_smp_mflags} LIBS="-lm -ldl"
 # only /usr/bin/lua links with readline now #luac_LDADD="liblua.la -lm -ldl"
-
-%if 0%{?bootstrap}
-pushd lua-%{bootstrap_version}
-%configure --with-readline --with-compat-module
-sed -i 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
-sed -i 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
-# Autotools give me a headache sometimes.
-sed -i 's|@pkgdatadir@|%{_datadir}|g' src/luaconf.h.template
-
-# hack so that only /usr/bin/lua gets linked with readline as it is the
-# only one which needs this and otherwise we get License troubles
-make %{?_smp_mflags} LIBS="-lm -ldl" luac_LDADD="liblua.la -lm -ldl"
-popd
-%endif
 
 
 %check
@@ -157,27 +115,12 @@ mkdir -p %{buildroot}%{_datadir}/lua/%{major_version}
 mv %{buildroot}%{_includedir}/luaconf.h %{buildroot}%{_includedir}/luaconf-%{_arch}.h
 install -p -m 644 %{SOURCE4} %{buildroot}%{_includedir}/luaconf.h
 
-%if 0%{?bootstrap}
-pushd lua-%{bootstrap_version}
-mkdir %{buildroot}/installdir
-make install DESTDIR=%{buildroot}/installdir
-cp -a %{buildroot}/installdir/%{_libdir}/liblua-%{bootstrap_major_version}.so %{buildroot}%{_libdir}/
-mkdir -p %{buildroot}%{_libdir}/lua/%{bootstrap_major_version}
-mkdir -p %{buildroot}%{_datadir}/lua/%{bootstrap_major_version}
-rm -rf %{buildroot}/installdir
-popd
-%endif
-
 
 %files
 %license mit.txt
 %doc README doc/*.html doc/*.css doc/*.gif doc/*.png
 %{_bindir}/lua
 %{_bindir}/luac
-%if 0%{?bootstrap}
-%dir %{_libdir}/lua/%{bootstrap_major_version}
-%dir %{_datadir}/lua/%{bootstrap_major_version}
-%endif
 %{_mandir}/man1/lua*.1*
 %dir %{_libdir}/lua
 %dir %{_libdir}/lua/%{major_version}
@@ -187,9 +130,6 @@ popd
 
 %files libs
 %{_libdir}/liblua-%{major_version}.so
-%if 0%{?bootstrap}
-%{_libdir}/liblua-%{bootstrap_major_version}.so
-%endif
 
 
 %files devel
@@ -206,6 +146,7 @@ popd
 %changelog
 * Tue Jan 10 2017 Carl George <carl.george@rackspace.com> - 5.3.3-1.ius
 - Port from Fedora to IUS
+- Remove bootstrap components
 
 * Tue Jul 26 2016 Tom Callaway <spot@fedoraproject.org> - 5.3.3-3
 - create lua-libs subpackage
