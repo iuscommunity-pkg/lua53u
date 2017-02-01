@@ -1,7 +1,7 @@
 %global major_version 5.3
 
 Name:           lua53u
-Version:        %{major_version}.3
+Version:        %{major_version}.4
 Release:        1.ius%{?dist}
 Summary:        Powerful light-weight programming language
 Group:          Development/Languages
@@ -17,10 +17,6 @@ Patch0:         lua-5.3.0-autotoolize.patch
 Patch1:         lua-5.3.0-idsize.patch
 Patch3:         lua-5.2.2-configure-linux.patch
 Patch4:         lua-5.3.0-configure-compat-module.patch
-# https://www.lua.org/bugs.html#5.3.3-1
-Patch9:         lua-5.3.3-upstream-bug-1.patch
-# https://www.lua.org/bugs.html#5.3.3-2
-Patch10:        lua-5.3.3-upstream-bug-2.patch
 Patch20:        lua-5.3.3-pc-compat.patch
 
 BuildRequires:  automake autoconf libtool readline-devel ncurses-devel
@@ -76,8 +72,6 @@ mv src/luaconf.h src/luaconf.h.template.in
 %patch1 -p1 -z .idsize
 %patch3 -p1 -z .configure-linux
 %patch4 -p1 -z .configure-compat-all
-%patch9 -p1 -b .crashfix
-%patch10 -p1 -b .readpast
 %patch20 -p1
 autoreconf -i
 
@@ -159,6 +153,10 @@ install -p -m 644 %{SOURCE4} %{buildroot}%{_includedir}/lua-%{major_version}/lua
 
 
 %changelog
+* Wed Feb 01 2017 Carl George <carl.george@rackspace.com> - 5.3.4-1.ius
+- Latest upstream
+- Patches 9 and 10 fixed upstream
+
 * Tue Jan 10 2017 Carl George <carl.george@rackspace.com> - 5.3.3-1.ius
 - Port from Fedora to IUS
 - Remove bootstrap components
