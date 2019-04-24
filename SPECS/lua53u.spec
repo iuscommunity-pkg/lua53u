@@ -1,7 +1,11 @@
 %global major_version 5.3
 
+# Add a variable for tests version as the newest version may not have matching
+# tests available, and should pass all previous tests. 
+%global tests_version %{major_version}.4
+
 Name:           lua53u
-Version:        %{major_version}.4
+Version:        %{major_version}.5
 Release:        1.ius%{?dist}
 Summary:        Powerful light-weight programming language
 Group:          Development/Languages
@@ -10,7 +14,7 @@ URL:            http://www.lua.org/
 Source0:        http://www.lua.org/ftp/lua-%{version}.tar.gz
 # copied from doc/readme.html on 2014-07-18
 Source1:        mit.txt
-Source3:        http://www.lua.org/tests/lua-%{version}-tests.tar.gz
+Source3:        http://www.lua.org/tests/lua-%{tests_version}-tests.tar.gz
 # multilib
 Source4:        luaconf.h
 Patch0:         lua-5.3.0-autotoolize.patch
@@ -90,7 +94,7 @@ make %{?_smp_mflags} LIBS="-lm -ldl"
 
 
 %check
-cd ./lua-%{version}-tests/
+cd ./lua-%{tests_version}-tests/
 
 # Removing tests that fail under mock/koji
 sed -i.orig -e '
@@ -153,6 +157,9 @@ install -p -m 644 %{SOURCE4} %{buildroot}%{_includedir}/lua-%{major_version}/lua
 
 
 %changelog
+* Wed Apr 24 2019 evitalis <evitalis@users.noreply.github.com> - 5.3.5-1.ius
+- Latest upstream
+
 * Wed Feb 01 2017 Carl George <carl.george@rackspace.com> - 5.3.4-1.ius
 - Latest upstream
 - Patches 9 and 10 fixed upstream
